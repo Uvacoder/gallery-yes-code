@@ -1,0 +1,44 @@
+{
+  "cols": [
+    {
+      "srcName": "タイトル",
+      "dstName": "title",
+      "colType": "string"
+    },
+    {
+      "srcName": "説明",
+      "dstName": "content",
+      "colType": "string"
+    },
+    {
+      "srcName": "メイン画像-url",
+      "dstName": "mainImage",
+      "colType": "image"
+    },
+    {
+      "srcName": "サイズ",
+      "dstName": "mainImageSize",
+      "colType": "enum",
+      "replace": [
+        {
+          "pattern": "通常",
+          "replacement": "normal"
+        },
+        {
+          "pattern": "大き目",
+          "replacement": "large"
+        }
+      ]
+    },
+    {
+      "srcName": "og:title",
+      "dstName": "og:title",
+      "colType": "string"
+    },
+    {
+      "srcName": "og:description",
+      "dstName": "og:description",
+      "colType": "string"
+    }
+  ]
+}
