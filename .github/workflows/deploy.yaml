@@ -8,7 +8,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    environment: pages
+    environment: ${{ github.ref == 'refs/heads/main'  && 'pages' || 'pages-staging' }}
     # repository_dispatch しか使えないならいらない?
     # if: github.ref == 'refs/heads/main'
 
