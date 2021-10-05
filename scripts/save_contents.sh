@@ -43,13 +43,13 @@ npx sheet2content --map-config "${MAP_CONFIG}" \
   --image-info \
   --static-root "${SAVE_STATIC_DIR}" \
   "${PAGES_TABLE_NAME}" "${PAGES_SAVE_CONTENTS_DIR}" "${PAGES_SAVE_IMAGES_DIR}"
-  rsync -v -a --delete "${PAGES_SAVE_CONTENTS_DIR}/" "${PAGES_CONTENTS_DIR}"
-  rsync -v -a --delete "${PAGES_SAVE_IMAGES_DIR}/" "${PAGES_IMAGES_DIR}"
+  rsync -a --delete "${PAGES_SAVE_CONTENTS_DIR}/" "${PAGES_CONTENTS_DIR}"
+  rsync -a --delete "${PAGES_SAVE_IMAGES_DIR}/" "${PAGES_IMAGES_DIR}"
 
 npx sheet2content --map-config "${MAP_CONFIG}" \
   save \
   --image-info \
   --static-root "${SAVE_STATIC_DIR}" \
   "${GALLERY_TABLE_NAME}" "${GALLERY_SAVE_CONTENTS_DIR}" "${GALLERY_SAVE_IMAGES_DIR}"
-  rsync -v -a --delete "${GALLERY_SAVE_CONTENTS_DIR}/" "${GALLERY_CONTENTS_DIR}"
-  rsync -v -a --delete "${GALLERY_SAVE_IMAGES_DIR}/" "${GALLERY_IMAGES_DIR}"
+  rsync -a --delete "${GALLERY_SAVE_CONTENTS_DIR}/" "${GALLERY_CONTENTS_DIR}"
+  rsync -a --delete "${GALLERY_SAVE_IMAGES_DIR}/" "${GALLERY_IMAGES_DIR}"
