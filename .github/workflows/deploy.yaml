@@ -1,8 +1,6 @@
 name: deplpoy
 on:
   push:
-    branches:
-      - main
   repository_dispatch:
     # types: [opened, deleted]
 
