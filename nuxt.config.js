@@ -66,4 +66,8 @@ export default {
   router: {
     base: process.env.BASE_PATH || '',
   },
+
+  publicRuntimeConfig: {
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
+  },
 }
