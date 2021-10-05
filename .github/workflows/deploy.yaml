@@ -70,6 +70,7 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./dist
+        destination_dir: ${{ secrets.STAGING_DIR }}
         publish_branch: gh-pages
         force_orphan: ${{ github.ref == 'refs/heads/main' }}
 
