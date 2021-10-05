@@ -8,7 +8,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    environment: deploy
+    environment: pages
     # repository_dispatch しか使えないならいらない?
     # if: github.ref == 'refs/heads/main'
 
