@@ -22,7 +22,7 @@ export default Vue.extend({
       //   return join(this.$props.galleryPath, id)
       // }
       // return ''
-      return join(this.$props.galleryPath, id)
+      return join(this.$props.galleryPath, id, '/')
     },
   },
 })

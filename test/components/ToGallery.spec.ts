@@ -18,6 +18,6 @@ describe('ToGallery', () => {
     })
     expect(wrapper.vm).toBeTruthy()
     const link = wrapper.findComponent({ name: 'NuxtLink' })
-    expect(link.props()).toHaveProperty('to', '/gallery/abc123')
+    expect(link.props()).toHaveProperty('to', '/gallery/abc123/')
   })
 })
