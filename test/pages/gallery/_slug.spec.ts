@@ -1,7 +1,19 @@
 import Vue from 'vue'
-import { shallowMount } from '@vue/test-utils'
+import { shallowMount, createLocalVue } from '@vue/test-utils'
+import VueMeta from 'vue-meta'
 import slugPage from '~/pages/gallery/_slug.vue'
 import { mockContent } from '@hankei6km/jest-mock-nuxt-content'
+
+const head = require('~/lib/head').head
+jest.mock('~/lib/head')
+beforeEach(() => {
+  head.mockClear()
+})
+
+// https://stackoverflow.com/questions/59964001/how-to-test-head-in-nuxt-js-using-jest
+// create vue with vue-meta
+const localVue = createLocalVue()
+localVue.use(VueMeta, { keyName: 'head' })
 
 describe('GallerySlugPage', () => {
   const mockDataImages = [
@@ -22,7 +34,7 @@ describe('GallerySlugPage', () => {
         size: { width: 800, height: 400 },
       },
       mainImageSize: 'normal',
-      content: 'text2',
+      description: 'excerpt text2',
     },
     {
       id: 'id3',
@@ -34,6 +46,9 @@ describe('GallerySlugPage', () => {
       mainImageSize: 'normal',
     },
   ]
+  const mockDataSiteTitle = {
+    title: 'site',
+  }
 
   it('should calls $content.fetch() method in asyncData', async () => {
     const content = mockContent()
@@ -45,19 +60,30 @@ describe('GallerySlugPage', () => {
         $content,
         params: { slug: 'id2' },
       } as any)
-      expect($content).toHaveBeenLastCalledWith('gallery', 'id2')
+
+      expect($content).toHaveBeenCalledWith('gallery', 'id2')
       await content.mockResponse(mockDataImages[1])
-      expect($content).toHaveBeenLastCalledWith('gallery')
+
+      expect($content).toHaveBeenCalledWith('gallery')
       const galleryChain = await content.mockResponse([
         mockDataImages[0],
         mockDataImages[2],
       ])
       expect(galleryChain.find('sortBy')).toHaveBeenCalledWith('position')
       expect(galleryChain.find('surround')).toHaveBeenCalledWith('id2')
+
+      expect($content).toHaveBeenCalledWith('pages/default')
+      const siteTitleChain = await content.mockResponse(mockDataSiteTitle)
+      expect(siteTitleChain.find('only')).toHaveBeenCalledWith(['title'])
+
       expect(await data).toEqual({
         image: mockDataImages[1],
         prev: mockDataImages[0],
         next: mockDataImages[2],
+        siteTitle: mockDataSiteTitle.title,
+        title: mockDataImages[1].title,
+        description: mockDataImages[1].description,
+        ogImage: mockDataImages[1].mainImage.url,
       })
 
       const NuxtImg = {
@@ -72,8 +98,15 @@ describe('GallerySlugPage', () => {
       }
       const mockData = await data
       const wrapper = shallowMount(slugPage, {
+        localVue,
         data() {
           return mockData
+        },
+        mocks: {
+          $config: {
+            baseURL: 'https://localhost:3000',
+          },
+          $img: 'dummy img',
         },
         stubs: {
           NuxtImg,
@@ -81,6 +114,15 @@ describe('GallerySlugPage', () => {
           ImageNav,
         },
       })
+
+      expect(head).toHaveBeenCalledWith(
+        'site',
+        'iamge2',
+        'excerpt text2',
+        '/images/gallery/image2.png',
+        'https://localhost:3000',
+        'dummy img'
+      )
       const img = wrapper.findAllComponents({ name: 'NuxtImg' })
       expect(img.at(0).props()).toHaveProperty(
         'src',
@@ -112,10 +154,17 @@ describe('GallerySlugPage', () => {
       expect(padChain.find('skip')).toHaveBeenCalledWith(2)
       expect(padChain.find('limit')).toHaveBeenCalledWith(1)
 
+      expect($content).toHaveBeenCalledWith('pages/default')
+      await content.mockResponse(mockDataSiteTitle)
+
       expect(await data).toEqual({
         image: mockDataImages[0],
         prev: mockDataImages[2],
         next: mockDataImages[1],
+        siteTitle: mockDataSiteTitle.title,
+        title: mockDataImages[0].title,
+        description: '',
+        ogImage: mockDataImages[0].mainImage.url,
       })
     }
   })
@@ -138,10 +187,17 @@ describe('GallerySlugPage', () => {
       expect(padChain.at(0)).toHaveBeenCalledWith('position')
       expect(padChain.find('limit')).toHaveBeenCalledWith(1)
 
+      expect($content).toHaveBeenCalledWith('pages/default')
+      await content.mockResponse(mockDataSiteTitle)
+
       expect(await data).toEqual({
         image: mockDataImages[2],
         prev: mockDataImages[1],
         next: mockDataImages[0],
+        siteTitle: mockDataSiteTitle.title,
+        title: mockDataImages[2].title,
+        description: '',
+        ogImage: mockDataImages[2].mainImage.url,
       })
     }
   })

@@ -44,13 +44,18 @@
 <script lang="ts">
 import Vue from 'vue'
 import { contentFunc, IContentDocument } from '@nuxt/content/types/content'
+import MetaInfo from 'vue-meta'
+import { head } from '~/lib/head'
 
 const sortedGallery = ($content: contentFunc) =>
   $content('gallery').sortBy('position')
 
 export default Vue.extend({
   async asyncData({ $content, params }) {
-    const image = await $content('gallery', params.slug).fetch()
+    const image: IContentDocument = (await $content(
+      'gallery',
+      params.slug
+    ).fetch()) as IContentDocument
     const sorted = sortedGallery($content)
     let [prev, next] = (await sorted.surround(params.slug).fetch()) as [
       IContentDocument,
@@ -73,7 +78,38 @@ export default Vue.extend({
         (await sortedGallery($content).limit(1).fetch()) as [IContentDocument]
       )[0] // このページを表示しているなら 1 件はあるはず.
     }
-    return { image, prev, next }
+    const { title: siteTitle }: IContentDocument = (await $content(
+      'pages/default'
+    )
+      .only(['title'])
+      .fetch()) as IContentDocument
+    return {
+      image,
+      prev,
+      next,
+      siteTitle,
+      title: image.title || '',
+      description: image.description || '',
+      ogImage: image.mainImage?.url || '',
+    }
+  },
+  data() {
+    return {
+      siteTitle: '',
+      title: '',
+      description: '',
+      ogImage: '',
+    }
+  },
+  head(): MetaInfo {
+    return head(
+      this.siteTitle,
+      this.title,
+      this.description,
+      this.ogImage,
+      this.$config.baseURL,
+      this.$img
+    )
   },
 })
 </script>

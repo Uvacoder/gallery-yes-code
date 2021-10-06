@@ -49,13 +49,44 @@
 </template>
 
 <script lang="ts">
+import { IContentDocument } from '@nuxt/content/types/content'
 import Vue from 'vue'
+import MetaInfo from 'vue-meta'
+import { head } from '~/lib/head'
 
 export default Vue.extend({
   async asyncData({ $content }) {
-    const article = await $content('pages/home').fetch()
-    const images = await $content('gallery').sortBy('position').fetch()
-    return { article, images }
+    const [article, images, { title: siteTitle }] = (await Promise.all([
+      $content('pages/home').fetch(),
+      $content('gallery').sortBy('position').fetch(),
+      $content('pages/default').only(['title']).fetch(),
+    ])) as [IContentDocument, IContentDocument[], IContentDocument]
+    return {
+      article,
+      images,
+      siteTitle,
+      title: article.title || '',
+      description: article.description || '',
+      ogImage: article.mainImage?.url || '',
+    }
+  },
+  data() {
+    return {
+      siteTitle: '',
+      title: '',
+      description: '',
+      ogImage: '',
+    }
+  },
+  head(): MetaInfo {
+    return head(
+      this.siteTitle,
+      this.title,
+      this.description,
+      this.ogImage,
+      this.$config.baseURL,
+      this.$img
+    )
   },
 })
 </script>
