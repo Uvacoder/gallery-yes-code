@@ -54,6 +54,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BASE_PATH: ${{ secrets.BASE_PATH }}
+        BASE_URL: ${{ secrets.BASE_URL }}
         SHEET2CONTENT_API_BASE_URL: ${{ secrets.SHEET2CONTENT_API_BASE_URL }}
         SHEET2CONTENT_APP_ID: ${{ secrets.SHEET2CONTENT_APP_ID }}
         SHEET2CONTENT_ACCESS_KEY: ${{ secrets.SHEET2CONTENT_ACCESS_KEY }}
