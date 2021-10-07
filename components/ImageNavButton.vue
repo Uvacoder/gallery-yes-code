@@ -61,7 +61,15 @@
           {{ image.title }}
         </p>
       </div>
-      <div :class="dir === 'next' ? 'order-last' : 'order-first'">
+      <div
+        :class="[
+          'h-full',
+          'flex',
+          'items-center',
+          'justify-center',
+          dir === 'next' ? 'order-last' : 'order-first',
+        ]"
+      >
         <fa :icon="dirIcon" class="text-xl text-secondary" />
       </div>
     </div>
