@@ -1,5 +1,5 @@
 <template>
-  <ToGallery :gallery-id="image.id">
+  <ToGallery :aria-label="dirLabel" :gallery-id="image.id">
     <div
       class="
         flex
@@ -62,11 +62,7 @@
         </p>
       </div>
       <div :class="dir === 'next' ? 'order-last' : 'order-first'">
-        <fa
-          :icon="dirIcon"
-          class="text-xl text-secondary"
-          :aria-label="dirLabel"
-        />
+        <fa :icon="dirIcon" class="text-xl text-secondary" />
       </div>
     </div>
   </ToGallery>

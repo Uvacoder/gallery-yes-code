@@ -16,7 +16,7 @@
         <ImageNavButton class="mx-auto" dir="prev" :image="prev" />
       </li>
       <li class="col-span-1">
-        <NuxtLink to="/" class="mx-auto">
+        <NuxtLink aria-label="ホームへ戻る" to="/" class="mx-auto">
           <div
             class="
               flex
@@ -32,11 +32,7 @@
             "
           >
             <div class="w-12 h-12 h-full flex items-center justify-center">
-              <fa
-                :icon="faHome"
-                class="text-gray-500"
-                aria-label="ホームへ戻る"
-              />
+              <fa :icon="faHome" class="text-gray-500" />
             </div>
           </div>
         </NuxtLink>
