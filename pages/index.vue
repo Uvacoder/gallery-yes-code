@@ -33,6 +33,7 @@
                 :height="tile.image.height"
                 :sizes="tile.image.sizes"
                 :alt="tile.image.alt"
+                loading="lazy"
                 class="
                   h-full
                   w-full
