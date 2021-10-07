@@ -37,7 +37,7 @@
     },
     {
       "srcName": "og:description",
-      "dstName": "description",
+      "dstName": "og:description",
       "colType": "string"
     }
   ]

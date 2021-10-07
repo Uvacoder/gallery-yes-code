@@ -45,6 +45,16 @@ describe('GallerySlugPage', () => {
       },
       mainImageSize: 'normal',
     },
+    {
+      id: 'id4',
+      title: 'iamge4',
+      mainImage: {
+        url: '/images/gallery/image4.png',
+        size: { width: 800, height: 400 },
+      },
+      'og:description': 'exceprt text4 in og:description',
+      mainImageSize: 'normal',
+    },
   ]
   const mockDataSiteTitle = {
     title: 'site',
@@ -127,6 +137,52 @@ describe('GallerySlugPage', () => {
       expect(img.at(0).props()).toHaveProperty(
         'src',
         '/images/gallery/image2.png'
+      )
+    }
+  })
+
+  it('should setiup head by og:description', async () => {
+    const content = mockContent()
+    const $content = content.$content
+    const vm = new Vue(slugPage)
+    if (vm.$options.asyncData) {
+      // https://tech.actindi.net/2019/07/12/083702
+      const data = vm.$options.asyncData({
+        $content,
+        params: { slug: 'id4' },
+      } as any)
+      await content.mockResponse(mockDataImages[3])
+      await content.mockResponse([mockDataImages[1], null])
+
+      await content.mockResponse([mockDataImages[0]])
+      await content.mockResponse(mockDataSiteTitle)
+
+      const mockData = await data
+      const wrapper = shallowMount(slugPage, {
+        localVue,
+        data() {
+          return mockData
+        },
+        mocks: {
+          $config: {
+            baseURL: 'https://localhost:3000',
+          },
+          $img: 'dummy img',
+        },
+        stubs: {
+          NuxtImg: true,
+          NuxtContent: true,
+          ImageNav: true,
+        },
+      })
+
+      expect(head).toHaveBeenCalledWith(
+        'site',
+        'iamge4',
+        'exceprt text4 in og:description',
+        '/images/gallery/image4.png',
+        'https://localhost:3000',
+        'dummy img'
       )
     }
   })
