@@ -67,7 +67,7 @@ export default Vue.extend({
       images,
       siteTitle,
       title: article.title || '',
-      description: article.description || '',
+      description: article['og:description'] || article.description || '',
       ogImage: article.mainImage?.url || '',
     }
   },
