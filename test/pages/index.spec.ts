@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { shallowMount, createLocalVue } from '@vue/test-utils'
 import VueMeta from 'vue-meta'
 import { mockContent } from '@hankei6km/jest-mock-nuxt-content'
@@ -49,10 +48,30 @@ describe('IndexPage', () => {
       title: 'site',
     }
 
-    const vm = new Vue(indexPage)
-    if (vm.$options.asyncData) {
+    // aysncData 実行用のインスタンスを作成.
+    const localVueAsyncData = createLocalVue()
+    localVueAsyncData.use(VueMeta, { keyName: 'head' })
+    const wrapperAsyncData = shallowMount(indexPage, {
+      localVue: localVueAsyncData,
+      mocks: {
+        $config: {
+          baseURL: 'https://localhost:3000',
+        },
+        $img: 'dummy img',
+      },
+      stubs: {
+        ToGallery: true,
+        NuxtContent: true,
+        NuxtImg: true,
+        ImageTiles: true,
+      },
+    })
+    if (wrapperAsyncData.vm.$options.asyncData) {
       // Nuxt のライフサイクルとは厳密には異なる挙動、かな?
-      const data = vm.$options.asyncData({ $content, params: {} } as any)
+      const data = wrapperAsyncData.vm.$options.asyncData({
+        $content,
+        params: {},
+      } as any)
 
       expect($content).toHaveBeenCalledWith('pages/home')
       await content.mockResponse(mockDataArticle)
@@ -80,6 +99,8 @@ describe('IndexPage', () => {
         template: '<a></a>',
         props: ['galleryId'],
       }
+
+      // asyncData の戻り値を data とするインスタンスを作成
       const mockData = await data
       const wrapper = shallowMount(indexPage, {
         localVue,

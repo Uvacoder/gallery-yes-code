@@ -63,10 +63,27 @@ describe('GallerySlugPage', () => {
   it('should calls $content.fetch() method in asyncData', async () => {
     const content = mockContent()
     const $content = content.$content
-    const vm = new Vue(slugPage)
-    if (vm.$options.asyncData) {
+
+    // aysncData 実行用のインスタンスを作成.
+    const localVueAsyncData = createLocalVue()
+    localVueAsyncData.use(VueMeta, { keyName: 'head' })
+    const wrapperAsyncData = shallowMount(slugPage, {
+      localVue: localVueAsyncData,
+      mocks: {
+        $config: {
+          baseURL: 'https://localhost:3000',
+        },
+        $img: 'dummy img',
+      },
+      stubs: {
+        NuxtImg: true,
+        NuxtContent: true,
+        ImageNav: true,
+      },
+    })
+    if (wrapperAsyncData.vm.$options.asyncData) {
       // Nuxt のライフサイクルとは厳密には異なる挙動、かな?
-      const data = vm.$options.asyncData({
+      const data = wrapperAsyncData.vm.$options.asyncData({
         $content,
         params: { slug: 'id2' },
       } as any)
