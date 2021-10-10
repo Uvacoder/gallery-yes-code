@@ -25,8 +25,8 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",
-    "@hankei6km/appsheet-to-nuxt-content": "^0.1.1-pre.0",
-    "@hankei6km/jest-mock-nuxt-content": "^0.1.1-pre.0",
+    "@hankei6km/appsheet-to-nuxt-content": "^0.1.1",
+    "@hankei6km/jest-mock-nuxt-content": "^0.1.1",
     "@nuxt/image": "^0.6.0",
     "@nuxt/test-utils": "^0.2.2",
     "@nuxt/types": "^2.15.7",
