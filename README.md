@@ -1,6 +1,6 @@
 # gallery-yes-code
 
-AppSheet と nuxt-content で作る、イエスコードな Static Gallery Site。
+[AppSheet](https://www.appsheet.com/) に [nuxt-content](https://content.nuxtjs.org/ja) でコードをちょい足しして作った Static Gallery Site。
 
 ## 概要
 
