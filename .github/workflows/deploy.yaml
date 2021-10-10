@@ -1,0 +1,78 @@
+name: deplpoy
+on:
+  push:
+  repository_dispatch:
+    # types: [opened, deleted]
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main'  && 'pages' || 'pages-staging' }}
+    # repository_dispatch しか使えないならいらない?
+    # if: github.ref == 'refs/heads/main'
+
+    steps:
+    - run: echo "${{ github.event.action }}"
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js 14
+      uses: actions/setup-node@v2
+      with:
+         node-version: 14
+
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    - name: Cache node_modules
+      uses: actions/cache@v2
+      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
+    - name: Install modules
+      run: yarn install
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Run linter
+      run: yarn lint
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Run tests
+      run: yarn test
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Save remote contents
+      run: yarn save:contents
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BASE_PATH: ${{ secrets.BASE_PATH }}
+        BASE_URL: ${{ secrets.BASE_URL }}
+        SHEET2CONTENT_API_BASE_URL: ${{ secrets.SHEET2CONTENT_API_BASE_URL }}
+        SHEET2CONTENT_APP_ID: ${{ secrets.SHEET2CONTENT_APP_ID }}
+        SHEET2CONTENT_ACCESS_KEY: ${{ secrets.SHEET2CONTENT_ACCESS_KEY }}
+        SHEET2CONTENT_STATIC_ROOT: ${{ secrets.SHEET2CONTENT_STATIC_ROOT }}
+
+    - name: Run generate
+      run: yarn generate
+      env:
+        BASE_PATH: ${{ secrets.BASE_PATH }}
+        BASE_URL: ${{ secrets.BASE_URL }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
+        destination_dir: ${{ secrets.STAGING_DIR }}
+        publish_branch: gh-pages
+        force_orphan: ${{ github.ref == 'refs/heads/main' }}
+

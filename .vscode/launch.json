@@ -1,0 +1,47 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "dev:debug",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "dev"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            //"type": "pwa-node",
+            "type": "node",
+            "envFile": "${workspaceFolder}/.env.debug",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "autoAttachChildProcesses": true
+        },
+        {
+            // vue-cli-service を指定しなくともこれでいけるもよう.
+            // (新しい debugger とやらのおかげ?)
+            // 開始直後は breakpoint が Unbound になるが、atatch のタイムラグか?
+            "name": "test:debog",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "test",
+                "--",
+                "--runInBand"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node",
+            "envFile": "${workspaceFolder}/.env.debug",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        },
+    ]
+}

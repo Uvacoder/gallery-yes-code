@@ -27,7 +27,9 @@
       "@nuxt/types",
       "@nuxtjs/axios",
       "@nuxt/content",
-      "@types/node"
+      "@nuxt/image",
+      "@types/node",
+      "@types/jest"
     ]
   },
   "exclude": [
